@@ -22,6 +22,28 @@ jobs:
         with:
           gradle-version: '9.3.1'
 
+      # --- FIX 1: the missing debug.keystore that killed the build ---
+      - name: Create debug keystore
+        run: |
+          keytool -genkeypair -v \
+            -keystore debug.keystore \
+            -alias androiddebugkey \
+            -keyalg RSA -keysize 2048 -validity 10000 \
+            -storepass android -keypass android \
+            -dname "CN=Android Debug, O=Android, C=US"
+
+      # --- FIX 2: optional google-services.json (only runs if the secret exists) ---
+      - name: Restore google-services.json
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: |
+          if [ -n "$GOOGLE_SERVICES_JSON" ]; then
+            printf '%s' "$GOOGLE_SERVICES_JSON" > app/google-services.json
+            echo "google-services.json written."
+          else
+            echo "::warning::GOOGLE_SERVICES_JSON secret not set - skipping."
+          fi
+
       - name: Build Debug APK
         run: gradle assembleDebug --stacktrace
 
