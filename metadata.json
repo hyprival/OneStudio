@@ -1,0 +1,6 @@
+{
+  "name": "OneAPK Studio",
+  "description": "One UI APK compatibility adapter, signature conflict patcher, and anti-tamper security dashboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
